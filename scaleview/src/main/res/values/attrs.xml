@@ -2,8 +2,8 @@
 <resources>
     <declare-styleable name="ScaleView">
         <attr name="modelby" format="integer">
-            <enum name="by_width" value="1"/>
-            <enum name="by_height" value="2"/>
+            <enum name="by_width" value="0"/>
+            <enum name="by_height" value="1"/>
         </attr>
         <attr name="multiple" format="float"/>
     </declare-styleable>

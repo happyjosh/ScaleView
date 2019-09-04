@@ -2,21 +2,31 @@ package com.jph.scaleview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.annotation.IntDef;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.View.MeasureSpec;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 /**
  * Created by jph on 2019-09-04.
  */
 public class ScaleViewProxy {
+    @IntDef({BY_WIDTH, BY_HEIGHT})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface ModelBy {
+    }
+
+    public static final int BY_WIDTH = 0;// 以width为标准
+    public static final int BY_HEIGHT = 1;// 以height为标准
+
     private View v;
 
-    public static final int MODEL_BY_WIDTH = 1;// 以width为标准
-    public static final int MODEL_BY_HEIGHT = 2;// 以height为标准
-
-    private int modelBy = 0;
-    private float multiple = 1;
+    @ModelBy
+    private int modelBy = BY_WIDTH;
+    private float multiple = 1f;
 
     public ScaleViewProxy(View v) {
         super();
@@ -27,8 +37,8 @@ public class ScaleViewProxy {
         // 获得属性值
         TypedArray a = context.obtainStyledAttributes(attrs,
                 R.styleable.ScaleView);
-        modelBy = a.getInt(R.styleable.ScaleView_modelby, 0);// 模式
-        multiple = a.getFloat(R.styleable.ScaleView_multiple, 1);// 倍数，默认一倍
+        modelBy = a.getInt(R.styleable.ScaleView_modelby, BY_WIDTH);// 模式
+        multiple = a.getFloat(R.styleable.ScaleView_multiple, 1f);// 倍数，默认一倍
         a.recycle();
 
     }
@@ -65,11 +75,11 @@ public class ScaleViewProxy {
             }
         }
 
-        if (modelBy == MODEL_BY_WIDTH) {
+        if (modelBy == BY_WIDTH) {
             // 以width为准
             height = (int) (width * multiple);
 
-        } else if (modelBy == MODEL_BY_HEIGHT) {
+        } else if (modelBy == BY_HEIGHT) {
             // 以height为准
             width = (int) (height * multiple);
         }
@@ -79,11 +89,12 @@ public class ScaleViewProxy {
         // imageView.setMeasuredDimension(width, height);
     }
 
+    @ModelBy
     public int getModelBy() {
         return modelBy;
     }
 
-    public void setModelBy(int modelBy) {
+    public void setModelBy(@ModelBy int modelBy) {
         this.modelBy = modelBy;
         v.invalidate();
     }
